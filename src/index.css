@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.infoCharacter {
+  @apply flex flex-col items-center justify-center w-full bg-white h-28 shadow-[0_-20px_50px_-25px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_5px_5px_#e4410084] rounded;
+}

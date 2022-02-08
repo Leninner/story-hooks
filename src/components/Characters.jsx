@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { InfoCharacter } from './InfoCharacter';
 
 export const Characters = () => {
   const [characters, setCharacters] = useState({ loading: true, data: [] });
@@ -15,15 +16,17 @@ export const Characters = () => {
 
   const { loading, data } = characters;
 
+  console.log(data);
+
   return (
-    <div>
-      <h2>Characters</h2>
+    <section className='w-full bg-[#E6EBEE] dark:bg-slate-700 pt-52'>
       {loading && <p>Loading...</p>}
-      <ul>
-        {data.map(({ id, name }) => (
-          <li key={id}>{name}</li>
-        ))}
-      </ul>
-    </div>
+      <div className='flex flex-wrap justify-center py-50'>
+        {data.map((character) => {
+          const { id } = character;
+          return <InfoCharacter key={id} {...character} />;
+        })}
+      </div>
+    </section>
   );
 };

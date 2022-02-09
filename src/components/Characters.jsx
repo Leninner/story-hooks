@@ -16,8 +16,6 @@ export const Characters = () => {
 
   const { loading, data } = characters;
 
-  console.log(data);
-
   return (
     <section className='w-full bg-[#E6EBEE] dark:bg-slate-700 pt-52'>
       {loading && <p>Loading...</p>}

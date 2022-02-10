@@ -1,5 +1,6 @@
-import { useEffect, useState, useReducer, useMemo, useRef } from 'react';
+import { useEffect, useState, useReducer, useMemo, useRef, useCallback } from 'react';
 import { InfoCharacter } from './InfoCharacter';
+import { Search } from './Search';
 
 const initialState = {
   favorites: [],
@@ -22,7 +23,9 @@ export const Characters = () => {
   const { loading, data } = characters;
   const searchInput = useRef(null);
 
-  const handleSearch = () => setSearch(searchInput.current.value);
+  const handleSearch = useCallback(() => {
+    setSearch(searchInput.current.value);
+  }, []);
 
   const filteredUsers = useMemo(() => {
     return data.filter((user) => {
@@ -48,9 +51,7 @@ export const Characters = () => {
     <section className='w-full bg-[#E6EBEE] dark:bg-slate-700 pt-52'>
       {loading && <p>Loading...</p>}
 
-      <div>
-        <input type='text' name='search' id='search' value={search} onChange={handleSearch} ref={searchInput} />
-      </div>
+      <Search search={search} searchInput={searchInput} handleSearch={handleSearch} />
 
       {favorites.favorites.length ? (
         <>

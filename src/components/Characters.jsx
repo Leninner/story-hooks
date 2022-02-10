@@ -1,4 +1,4 @@
-import { useEffect, useState, useReducer } from 'react';
+import { useEffect, useState, useReducer, useMemo, useRef } from 'react';
 import { InfoCharacter } from './InfoCharacter';
 
 const initialState = {
@@ -17,8 +17,18 @@ const favoriteReducer = (state = initialState, action) => {
 
 export const Characters = () => {
   const [characters, setCharacters] = useState({ loading: true, data: [] });
-
+  const [search, setSearch] = useState('');
   const [favorites, dispatch] = useReducer(favoriteReducer, initialState);
+  const { loading, data } = characters;
+  const searchInput = useRef(null);
+
+  const handleSearch = () => setSearch(searchInput.current.value);
+
+  const filteredUsers = useMemo(() => {
+    return data.filter((user) => {
+      return user.name.toLowerCase().includes(search.toLowerCase());
+    });
+  }, [data, search]);
 
   const handleClick = (character) => {
     dispatch({ type: 'ADD_TO_FAVORITEs', payload: character });
@@ -34,11 +44,14 @@ export const Characters = () => {
     fetchCharacters();
   }, []);
 
-  const { loading, data } = characters;
-
   return (
     <section className='w-full bg-[#E6EBEE] dark:bg-slate-700 pt-52'>
       {loading && <p>Loading...</p>}
+
+      <div>
+        <input type='text' name='search' id='search' value={search} onChange={handleSearch} ref={searchInput} />
+      </div>
+
       {favorites.favorites.length ? (
         <>
           <h2 className='mb-2 text-3xl font-bold text-center tracking-tigh dark:text-white dark:drop-shadow-[0_5px_5px_#e4410084]'>
@@ -53,7 +66,7 @@ export const Characters = () => {
       ) : null}
 
       <div className='flex flex-wrap justify-center py-50'>
-        {data.map((character) => {
+        {filteredUsers.map((character) => {
           const { id } = character;
           return <InfoCharacter key={id} {...character} onClick={() => handleClick(character)} />;
         })}

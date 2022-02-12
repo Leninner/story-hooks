@@ -1,4 +1,5 @@
 import { useEffect, useState, useReducer, useMemo, useRef, useCallback } from 'react';
+import { useCharacter } from '../hooks/useCharacter';
 import { InfoCharacter } from './InfoCharacter';
 import { Search } from './Search';
 
@@ -17,11 +18,10 @@ const favoriteReducer = (state = initialState, action) => {
 };
 
 export const Characters = () => {
-  const [characters, setCharacters] = useState({ loading: true, data: [] });
   const [search, setSearch] = useState('');
   const [favorites, dispatch] = useReducer(favoriteReducer, initialState);
-  const { loading, data } = characters;
   const searchInput = useRef(null);
+  const { loading, data } = useCharacter('https://rickandmortyapi.com/api/character');
 
   const handleSearch = useCallback(() => {
     setSearch(searchInput.current.value);
@@ -36,16 +36,6 @@ export const Characters = () => {
   const handleClick = (character) => {
     dispatch({ type: 'ADD_TO_FAVORITEs', payload: character });
   };
-
-  useEffect(() => {
-    const fetchCharacters = async () => {
-      const response = await fetch('https://rickandmortyapi.com/api/character');
-      const data = response.json().then((data) => data.results);
-      data.then((data) => setCharacters({ loading: false, data }));
-    };
-
-    fetchCharacters();
-  }, []);
 
   return (
     <section className='w-full bg-[#E6EBEE] dark:bg-slate-700 pt-52'>
